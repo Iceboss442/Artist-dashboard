@@ -1,0 +1,1027 @@
+<pre>
+  <code>
+    <div>
+      <p>
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        
+        body {
+            box-sizing: border-box;
+            background-color: #000000 !important;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6, .heading {
+            font-family: 'Raleway', sans-serif !important;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            overflow-x: hidden;
+        }
+        
+        .custom-red {
+            color: #E50914;
+        }
+        
+        .bg-custom-red {
+            background-color: #E50914;
+        }
+        
+        .border-custom-red {
+            border-color: #E50914;
+        }
+        
+        .hover-custom-red:hover {
+            background-color: #E50914;
+        }
+        
+        .sidebar-item {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #E50914;
+            transform: translateX(8px);
+        }
+        
+        .sidebar-item.active {
+            background-color: #E50914;
+            color: #ffffff;
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+            border-radius: 16px;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(229, 9, 20, 0.4), 0 10px 20px rgba(229, 9, 20, 0.3), 0 0 0 1px rgba(229, 9, 20, 0.2);
+            border-color: #E50914;
+        }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        
+        .status-progress {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .status-attention {
+            background-color: #E50914;
+            color: #ffffff;
+        }
+        
+        .status-completed {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .chat-message {
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .drag-drop-area {
+            transition: all 0.3s ease;
+            background-color: #000000;
+            border-radius: 16px;
+        }
+        
+        .drag-drop-area:hover {
+            background-color: rgba(229, 9, 20, 0.1);
+        }
+        
+        .mobile-nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-nav-item.active span {
+            color: #E50914;
+        }
+        
+        .mobile-nav-item.active div {
+            background-color: #E50914;
+        }
+    </style>
+</head>
+<body class="bg-black text-white" style="font-family: 'Poppins', sans-serif;">
+    <div class="flex h-screen overflow-x-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 bg-black flex flex-col lg:flex hidden fixed h-full z-40">
+            <div class="p-8">
+                <h1 class="text-2xl font-bold custom-red">Studio Dashboard</h1>
+            </div>
+            
+            <nav class="flex-1 p-6">
+                <ul class="space-y-4">
+                    <li><a href="#" class="sidebar-item active flex items-center p-4 text-white font-semibold" onclick="showSection('home')">
+                        <span class="ml-3">Home</span>
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold" onclick="showSection('projects')">
+                        <span class="ml-3">My Projects</span>
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold" onclick="showSection('engineers')">
+                        <span class="ml-3">My Engineers</span>
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
+                        <span class="ml-3">Plan & Billing</span>
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
+                        <span class="ml-3">Support</span>
+                    </a></li>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
+                        <span class="ml-3">Settings</span>
+                    </a></li>
+                </ul>
+            </nav>
+            
+            <div class="p-6">
+                <button class="sidebar-item w-full flex items-center p-4 text-white font-semibold">
+                    <span class="ml-3">Logout</span>
+                </button>
+            </div>
+        </div>
+
+
+
+
+
+        <!-- Main Content -->
+        <div class="flex-1 lg:ml-64 ml-0 min-w-0 overflow-x-hidden">
+            <!-- Mobile Top Header -->
+            <header class="bg-black border-b border-white border-opacity-20 lg:hidden">
+                <div class="flex items-center justify-between px-4 py-4">
+                    <div>
+                        <h1 class="text-4xl font-bold custom-red">Studio Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- Notification Bell -->
+                        <button id="notificationBtn" class="relative p-3 rounded-2xl hover:bg-white hover:bg-opacity-10 transition-all group bg-black border border-white border-opacity-20">
+                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Pro Badge -->
+                        <span class="bg-red-600 text-white px-4 py-3 rounded-2xl text-lg font-bold shadow-lg shadow-red-500/30">Pro</span>
+                        
+                        <!-- Profile Avatar -->
+                        <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center transition-all cursor-pointer">
+                            <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Desktop Top Header -->
+            <header class="bg-black border-b border-white border-opacity-20 hidden lg:block">
+                <div class="flex items-center justify-between px-4 py-4">
+                    <div class="lg:ml-0 ml-0">
+                        <h1 class="text-xl lg:text-2xl font-bold custom-red">Studio Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-3 lg:space-x-4">
+                        <!-- Notification Bell -->
+                        <button id="notificationBtn" class="relative p-3 rounded-full hover:bg-white hover:bg-opacity-10 transition-all group bg-black border border-white border-opacity-20">
+                            <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Plan Badge -->
+                        <span class="bg-red-600 text-white px-4 lg:px-4 py-2 lg:py-2 rounded-2xl lg:rounded-full text-sm lg:text-sm font-bold shadow-lg shadow-red-500/30 hover:shadow-red-500/50 transition-all cursor-pointer">Pro (Unlimited)</span>
+                        
+                        <!-- Profile Avatar -->
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center transition-all cursor-pointer">
+                            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Hero Section -->
+            <section class="bg-black overflow-hidden flex flex-col lg:mt-0 pb-8 relative z-10 px-4 py-8 lg:p-12" style="margin-top: 0; min-height: 80vh; position: relative; margin-left: 0; margin-right: 0; width: 100vw; margin-left: calc(-50vw + 50%);">
+                <style>
+                    @media (max-width: 1023px) {
+                        section {
+                            min-height: auto !important;
+                            margin-left: calc(-50vw + 50%) !important;
+                            width: 100vw !important;
+                            padding-left: 1rem !important;
+                            padding-right: 1rem !important;
+                        }
+                    }
+                </style>
+                <!-- Animated Music Wave Background -->
+                <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                    <!-- Primary waves -->
+                    <svg class="absolute w-full h-full opacity-30" viewBox="0 0 1200 800" preserveAspectRatio="none">
+                        <path d="M0,400 Q300,200 600,400 T1200,400" stroke="#E50914" stroke-width="4" fill="none">
+                            <animate attributeName="d" dur="8s" repeatCount="indefinite" 
+                                values="M0,400 Q300,200 600,400 T1200,400;M0,400 Q300,600 600,400 T1200,400;M0,400 Q300,200 600,400 T1200,400"/>
+                        </path>
+                        <path d="M0,450 Q400,250 800,450 T1200,450" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.8">
+                            <animate attributeName="d" dur="6s" repeatCount="indefinite" 
+                                values="M0,450 Q400,250 800,450 T1200,450;M0,450 Q400,650 800,450 T1200,450;M0,450 Q400,250 800,450 T1200,450"/>
+                        </path>
+                        <path d="M0,350 Q200,150 400,350 T800,350 Q1000,150 1200,350" stroke="#E50914" stroke-width="2" fill="none" opacity="0.6">
+                            <animate attributeName="d" dur="10s" repeatCount="indefinite" 
+                                values="M0,350 Q200,150 400,350 T800,350 Q1000,150 1200,350;M0,350 Q200,550 400,350 T800,350 Q1000,550 1200,350;M0,350 Q200,150 400,350 T800,350 Q1000,150 1200,350"/>
+                        </path>
+                        <path d="M0,300 Q150,100 300,300 T600,300 Q750,100 900,300 T1200,300" stroke="#ffffff" stroke-width="1" fill="none" opacity="0.4">
+                            <animate attributeName="d" dur="12s" repeatCount="indefinite" 
+                                values="M0,300 Q150,100 300,300 T600,300 Q750,100 900,300 T1200,300;M0,300 Q150,500 300,300 T600,300 Q750,500 900,300 T1200,300;M0,300 Q150,100 300,300 T600,300 Q750,100 900,300 T1200,300"/>
+                        </path>
+                        <path d="M0,500 Q250,300 500,500 T1000,500 Q1100,300 1200,500" stroke="#E50914" stroke-width="1" fill="none" opacity="0.3">
+                            <animate attributeName="d" dur="14s" repeatCount="indefinite" 
+                                values="M0,500 Q250,300 500,500 T1000,500 Q1100,300 1200,500;M0,500 Q250,700 500,500 T1000,500 Q1100,700 1200,500;M0,500 Q250,300 500,500 T1000,500 Q1100,300 1200,500"/>
+                        </path>
+                    </svg>
+                    
+                    <!-- Floating particles -->
+                    <div class="absolute top-20 left-10 w-3 h-3 bg-red-500 rounded-full animate-pulse opacity-70"></div>
+                    <div class="absolute top-40 right-20 w-2 h-2 bg-white rounded-full animate-ping opacity-60"></div>
+                    <div class="absolute bottom-60 left-1/4 w-4 h-4 bg-red-400 rounded-full animate-bounce opacity-50"></div>
+                    <div class="absolute top-1/3 right-1/3 w-2 h-2 bg-white rounded-full animate-pulse opacity-70"></div>
+                    <div class="absolute bottom-40 right-10 w-3 h-3 bg-red-300 rounded-full animate-ping opacity-40"></div>
+                    <div class="absolute top-60 left-1/3 w-1 h-1 bg-white rounded-full animate-bounce opacity-80"></div>
+                </div>
+
+                <!-- Hero Content -->
+                <div class="flex-1 flex items-start justify-start lg:items-center lg:justify-center px-6 lg:px-8 pt-4 lg:py-12 relative z-20" style="margin-left: 8px;">
+                    <div class="text-left lg:text-center max-w-5xl relative z-20">
+                        <!-- Main Hero Text -->
+                        <h1 class="text-4xl sm:text-4xl md:text-4xl lg:text-6xl xl:text-7xl font-medium mb-8 md:mb-10 leading-relaxed text-left lg:text-center">
+                            <span class="text-white">Hey Alex,</span><br>
+                            <span class="text-white">Let's make something</span><br>
+                            <span class="text-red-500 relative">
+                                amazing today
+                                <div class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-transparent rounded-full"></div>
+                            </span>
+                        </h1>
+                        
+                        <!-- Subtitle -->
+                        <p class="text-lg sm:text-lg md:text-lg lg:text-base text-white text-opacity-70 mb-16 md:mb-20 leading-relaxed font-normal text-left lg:text-center">
+                            Your creative space is all set. Upload, chat, and mix without limits.
+                        </p>
+                        
+                        <!-- CTA Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-8 justify-start lg:justify-center items-start lg:items-center mb-12 md:mb-16 relative z-20">
+                            <button onclick="startNewProject()" class="w-full sm:w-auto bg-white hover:bg-gray-100 text-black font-bold py-6 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-xl lg:text-xl transition-all hover:scale-105 shadow-2xl shadow-white/20 hover:shadow-white/30 relative z-30 cursor-pointer">
+                                🎵 Start New Project
+                            </button>
+                            <button onclick="uploadFiles()" class="w-full sm:w-auto bg-black border-3 border-white text-white hover:bg-white hover:text-black font-bold py-6 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-xl lg:text-xl transition-all hover:scale-105 outline outline-2 outline-white relative z-30 cursor-pointer" style="margin-bottom: 10px;">
+                                📁 Upload Files
+                            </button>
+                        </div>
+                        
+                        <!-- Stats Row - Hidden on mobile, shown on desktop -->
+                        <div class="hidden md:grid grid-cols-3 gap-12 max-w-3xl mx-auto mb-12">
+                            <div class="text-center">
+                                <div class="text-3xl lg:text-4xl font-bold text-red-500 mb-4">14</div>
+                                <p class="text-white text-opacity-60 text-base">Projects This Month</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl lg:text-4xl font-bold text-white mb-4">2.8</div>
+                                <p class="text-white text-opacity-60 text-base">Avg. Turnaround Days</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl lg:text-4xl font-bold text-red-500 mb-4">3</div>
+                                <p class="text-white text-opacity-60 text-base">Active Chats</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll Indicator -->
+                <div class="text-center pb-8 hidden lg:block">
+                    <div class="animate-bounce">
+                        <div class="w-12 h-12 lg:w-8 lg:h-8 border-3 lg:border-2 border-white border-t-transparent rounded-full opacity-70 mx-auto"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Area -->
+            <main class="bg-black p-8 pb-32 lg:p-12 lg:pb-12" style="margin-top: 20px;">
+                <!-- Home Section -->
+                <div id="homeSection" class="space-y-16 lg:space-y-20">
+                    <!-- Mobile Projects Section -->
+                    <div class="lg:hidden" style="margin-top: 15px;">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-4xl font-bold text-white">Your Projects</h3>
+                            <span class="bg-red-600 text-white px-6 py-3 rounded-full text-xl font-bold">14</span>
+                        </div>
+                        
+                        <div class="space-y-8">
+                            <!-- Mobile Project Card -->
+                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex-1">
+                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Midnight Rain</h5>
+                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Joy • Due in 2 days</p>
+                                    </div>
+                                    <span class="bg-red-600 text-white px-5 py-3 rounded-full text-base font-bold">In Progress</span>
+                                </div>
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                                    💬 Open Chat
+                                </button>
+                            </div>
+                            
+                            <!-- Mobile Project Card -->
+                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex-1">
+                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Electric Nights</h5>
+                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Sarah • Due in 1 day</p>
+                                    </div>
+                                    <span class="bg-red-600 text-white px-5 py-3 rounded-full text-base font-bold">Review</span>
+                                </div>
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                                    💬 Open Chat
+                                </button>
+                            </div>
+                            
+                            <!-- Mobile Project Card -->
+                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex-1">
+                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Summer Vibes</h5>
+                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Lisa Rodriguez • Delivered</p>
+                                    </div>
+                                    <span class="bg-white text-black px-5 py-3 rounded-full text-base font-bold">Done</span>
+                                </div>
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white border border-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all">
+                                    📥 Download
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full mt-8 bg-white hover:bg-black hover:text-white text-black border border-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all">
+                            View All Projects
+                        </button>
+                    </div>
+
+                    <!-- Mobile Quick Actions -->
+                    <div class="lg:hidden">
+                        <h3 class="text-3xl lg:text-2xl font-bold text-white mb-8">Quick Actions</h3>
+                        <div class="overflow-x-auto">
+                            <div class="flex space-x-6 pb-4" style="min-width: max-content;">
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-red-600 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">🎵</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">New Project</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Start creating</p>
+                                </div>
+                                
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">📁</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Upload Files</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Drop your stems</p>
+                                </div>
+                                
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">💬</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Chat</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Talk to engineer</p>
+                                </div>
+                                
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">🎚️</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Master</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Level up track</p>
+                                </div>
+                                
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">📊</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Analytics</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Track progress</p>
+                                </div>
+                                
+                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
+                                    <div class="w-20 h-20 bg-white rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                                        <span class="text-4xl">🎨</span>
+                                    </div>
+                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Templates</h4>
+                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Browse sounds</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Plan Card -->
+                    <div class="lg:hidden bg-gradient-to-r from-red-900/30 to-red-800/30 rounded-3xl p-8 border border-red-800/50">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-3xl lg:text-2xl font-bold text-white">Pro Plan</h3>
+                            <span class="bg-red-600 text-white px-6 py-3 lg:px-4 lg:py-2 rounded-full text-lg lg:text-base font-bold">Unlimited</span>
+                        </div>
+                        <p class="text-white text-opacity-80 text-xl lg:text-base mb-8">Mix, master, and refine without limits.</p>
+                        <button class="w-full bg-white hover:bg-black hover:text-white text-black font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                            Manage Plan
+                        </button>
+                    </div>
+
+                    <!-- Desktop Version (Hidden on Mobile) -->
+                    <div class="hidden lg:block space-y-12">
+                        <!-- Your Projects Panel -->
+                        <div class="bg-black rounded-2xl p-12 border border-gray-800 backdrop-blur-lg bg-opacity-90 shadow-2xl shadow-red-900/20">
+                            <h3 class="text-3xl md:text-5xl font-bold mb-8 text-white">Your Projects (14)</h3>
+                            <p class="text-gray-400 mb-12 text-xl">Everything you're working on — no limits, no waiting.</p>
+                            
+                            <div class="space-y-8">
+                                <div class="project-card bg-black p-10 rounded-2xl border border-red-900/30 hover:border-red-600 transition-all cursor-pointer backdrop-blur-sm bg-opacity-80 shadow-lg shadow-red-900/10">
+                                    <div class="flex justify-between items-start mb-8">
+                                        <h5 class="font-bold text-white text-2xl">Midnight Rain</h5>
+                                        <span class="status-badge bg-red-600 text-white text-base px-6 py-3">In Progress</span>
+                                    </div>
+                                    <p class="text-gray-300 mb-6 text-xl">Mixed by Joy</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400 text-lg">Due in 2 days</span>
+                                        <button class="bg-transparent border border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-lg transition-all font-semibold text-lg">
+                                            Open Chat
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="project-card bg-black p-10 rounded-2xl border border-red-900/30 hover:border-red-600 transition-all cursor-pointer backdrop-blur-sm bg-opacity-80 shadow-lg shadow-red-900/10">
+                                    <div class="flex justify-between items-start mb-8">
+                                        <h5 class="font-bold text-white text-2xl">Electric Nights</h5>
+                                        <span class="status-badge bg-red-600 text-white text-base px-6 py-3">Under Review</span>
+                                    </div>
+                                    <p class="text-gray-300 mb-6 text-xl">Mixed by Sarah</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400 text-lg">Due in 1 day</span>
+                                        <button class="bg-transparent border border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-lg transition-all font-semibold text-lg">
+                                            Open Chat
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="project-card bg-black p-10 rounded-2xl border border-red-900/30 hover:border-red-600 transition-all cursor-pointer backdrop-blur-sm bg-opacity-80 shadow-lg shadow-red-900/10">
+                                    <div class="flex justify-between items-start mb-8">
+                                        <h5 class="font-bold text-white text-2xl">Summer Vibes</h5>
+                                        <span class="status-badge bg-red-600 text-white text-base px-6 py-3">Completed</span>
+                                    </div>
+                                    <p class="text-gray-300 mb-6 text-xl">Mixed by Lisa Rodriguez</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-400 text-lg">Delivered</span>
+                                        <button class="bg-transparent border border-white text-white hover:bg-white hover:text-black px-8 py-4 rounded-lg transition-all font-semibold text-lg">
+                                            Download
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions Bar -->
+                        <div class="bg-black rounded-2xl p-12 border border-gray-800">
+                            <div class="grid grid-cols-2 gap-12">
+                                <div class="text-center group cursor-pointer">
+                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+                                    </div>
+                                    <h4 class="font-bold text-white mb-4 text-2xl">Start a New Project</h4>
+                                    <p class="text-gray-400 text-lg">New idea? Let's bring it to life.</p>
+                                </div>
+                                
+                                <div class="text-center group cursor-pointer">
+                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+                                    </div>
+                                    <h4 class="font-bold text-white mb-4 text-2xl">Upload Files</h4>
+                                    <p class="text-gray-400 text-lg">Drop your stems here. We'll handle the rest.</p>
+                                </div>
+                                
+                                <div class="text-center group cursor-pointer">
+                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+                                    </div>
+                                    <h4 class="font-bold text-white mb-4 text-2xl">Chat with Engineer</h4>
+                                    <p class="text-gray-400 text-lg">Stay connected with your sound.</p>
+                                </div>
+                                
+                                <div class="text-center group cursor-pointer">
+                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+                                    </div>
+                                    <h4 class="font-bold text-white mb-4 text-2xl">Master Your Track</h4>
+                                    <p class="text-gray-400 text-lg">Happy with your mix? Level it up.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Overview -->
+                        <div class="bg-gradient-to-r from-red-900/20 to-red-800/20 rounded-2xl p-12 border border-red-800/50">
+                            <h3 class="text-4xl font-bold mb-8 text-white">Your Plan: Pro (Unlimited)</h3>
+                            <p class="text-gray-300 mb-12 text-xl">Mix, master, and refine without limits. You're free to create as much as you like.</p>
+                            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-6 px-12 rounded-xl transition-all shadow-lg hover:shadow-red-600/30 text-xl">
+                                Manage Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div id="projectsSection" class="hidden space-y-8">
+                    <div class="flex space-x-8 pb-6">
+                        <button id="mixingTab" class="pb-3 px-4 text-custom-red font-bold text-lg bg-custom-red rounded-xl" onclick="showProjectTab('mixing')">
+                            Mixing
+                        </button>
+                        <button id="masteringTab" class="pb-3 px-4 text-white hover:text-custom-red font-bold text-lg hover:bg-custom-red rounded-xl transition-all" onclick="showProjectTab('mastering')">
+                            Mastering
+                        </button>
+                    </div>
+
+                    <div id="mixingProjects" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="project-card bg-black rounded-2xl p-6 cursor-pointer" onclick="openProject('midnight-dreams')">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-xl font-bold text-white">Midnight Dreams</h4>
+                                <span class="status-badge status-progress">In Progress</span>
+                            </div>
+                            <p class="text-white mb-2 font-semibold opacity-80">Engineer: Sarah Johnson</p>
+                            <p class="text-white opacity-60">Started: Sept 10, 2024</p>
+                        </div>
+
+                        <div class="project-card bg-black rounded-2xl p-6 cursor-pointer" onclick="openProject('electric-nights')">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-xl font-bold text-white">Electric Nights</h4>
+                                <span class="status-badge status-attention">Needs Your Attention</span>
+                            </div>
+                            <p class="text-white mb-2 font-semibold opacity-80">Engineer: Mike Chen</p>
+                            <p class="text-white mb-4 opacity-60">Started: Sept 8, 2024</p>
+                            <div class="p-3 bg-custom-red rounded-xl">
+                                <p class="text-white font-bold">New message from engineer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="masteringProjects" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="project-card bg-black rounded-2xl p-6 cursor-pointer">
+                            <div class="flex justify-between items-start mb-4">
+                                <h4 class="text-xl font-bold text-white">Summer Vibes</h4>
+                                <span class="status-badge status-completed">Completed</span>
+                            </div>
+                            <p class="text-white mb-2 font-semibold opacity-80">Engineer: Lisa Rodriguez</p>
+                            <p class="text-white opacity-60">Completed: Sept 5, 2024</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Detail View -->
+                <div id="projectDetail" class="hidden space-y-8">
+                    <div class="flex items-center space-x-6 mb-6">
+                        <button onclick="showSection('projects')" class="text-white hover:text-custom-red font-bold text-base transition-colors">
+                            ← Back to Projects
+                        </button>
+                        <h3 class="text-2xl font-bold text-white">Midnight Dreams</h3>
+                        <span class="status-badge status-progress">In Progress</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-black rounded-2xl p-8">
+                            <h4 class="text-xl font-bold mb-6 text-white">File Upload</h4>
+                            <div class="drag-drop-area p-10 text-center">
+                                <p class="text-white mb-3 font-semibold text-lg">Drag & drop your stems here</p>
+                                <p class="text-white mb-6 opacity-70">or click to browse files</p>
+                                <input type="file" multiple class="hidden" id="fileInput">
+                                <button onclick="document.getElementById('fileInput').click()" class="bg-custom-red hover:bg-red-800 text-white px-6 py-3 rounded-2xl font-bold transition-all hover:scale-105">
+                                    Browse Files
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-black rounded-2xl p-8">
+                            <h4 class="text-xl font-bold mb-6 text-white">Project Status</h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-4 h-4 bg-white rounded-full"></div>
+                                    <span class="text-white font-semibold">Engineer started mix on Sept 12, 2024</span>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-4 h-4 bg-custom-red rounded-full"></div>
+                                    <span class="text-white font-semibold">Waiting for your feedback</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 space-y-3">
+                                <button onclick="openChat()" class="w-full bg-custom-red hover:bg-red-800 text-white font-bold py-3 px-6 rounded-2xl transition-all hover:scale-105">
+                                    Chat with Sarah Johnson
+                                </button>
+                                <button class="w-full bg-white text-black hover:bg-white font-bold py-3 px-6 rounded-2xl transition-all hover:scale-105">
+                                    Ask for a Revision
+                                </button>
+                                <button class="w-full bg-white text-black hover:bg-white font-bold py-3 px-6 rounded-2xl transition-all hover:scale-105">
+                                    Send to Mastering
+                                </button>
+                                <button class="w-full bg-white text-black hover:bg-white font-bold py-3 px-6 rounded-2xl transition-all hover:scale-105">
+                                    Mark Completed
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engineers/Chat Section -->
+                <div id="engineersSection" class="hidden space-y-6">
+                    <div class="bg-black rounded-2xl p-8">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-2xl font-bold text-white">Chat with Sarah Johnson</h3>
+                            <span class="text-white font-bold bg-custom-red px-3 py-1 rounded-full">Online</span>
+                        </div>
+                        
+                        <div class="bg-black rounded-2xl p-6 mb-6">
+                            <p class="text-white mb-3 font-semibold">Everything here is safe and secure.</p>
+                            <p class="text-white font-semibold opacity-80">Your engineer is here to help your music sound its best, don't hesitate to ask questions.</p>
+                        </div>
+
+                        <div class="bg-black rounded-2xl p-6 h-80 overflow-y-auto mb-6" id="chatMessages">
+                            <div class="space-y-4">
+                                <div class="flex">
+                                    <div class="chat-message bg-black rounded-2xl p-4 ml-auto">
+                                        <p class="text-white font-semibold">Hey Sarah! How's the mix coming along?</p>
+                                        <span class="text-white text-sm opacity-60">2:30 PM</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex">
+                                    <div class="chat-message bg-custom-red rounded-2xl p-4">
+                                        <p class="text-white font-semibold">Hi Alex! The mix is sounding great. I've enhanced the vocals and tightened up the low end. Would love your feedback on the latest version!</p>
+                                        <span class="text-white text-sm opacity-80">2:45 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4">
+                            <input type="text" id="chatInput" placeholder="Type your message..." class="flex-1 bg-black rounded-2xl px-6 py-3 text-white focus:outline-none focus:ring-2 focus:ring-custom-red font-semibold">
+                            <button onclick="sendMessage()" class="bg-custom-red hover:bg-red-800 text-white px-8 py-3 rounded-2xl font-bold transition-all hover:scale-105">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Notifications Sidebar -->
+        <div id="notificationsSidebar" class="fixed right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-800 transform translate-x-full transition-transform duration-300 z-50">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-white">Notifications</h3>
+                    <button onclick="toggleNotifications()" class="text-gray-400 hover:text-white">✕</button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-red-600">
+                        <p class="text-white font-semibold mb-2">Your mix for 'Echoes' has been delivered!</p>
+                        <p class="text-gray-400 text-sm mb-3">2 hours ago</p>
+                        <button class="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1 rounded text-sm transition-all">
+                            Reply
+                        </button>
+                    </div>
+                    
+                    <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-red-600">
+                        <p class="text-white font-semibold mb-2">Joy requested feedback on 'Sunrise'.</p>
+                        <p class="text-gray-400 text-sm mb-3">4 hours ago</p>
+                        <button class="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1 rounded text-sm transition-all">
+                            Reply
+                        </button>
+                    </div>
+                    
+                    <div class="bg-gray-800 rounded-xl p-4 border-l-4 border-gray-600">
+                        <p class="text-white font-semibold mb-2">'Midnight Rain' mixing started</p>
+                        <p class="text-gray-400 text-sm">Yesterday</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50 shadow-2xl shadow-black/50 h-[70px]">
+            <div class="flex justify-around items-center h-full">
+                <div class="mobile-nav-item active flex items-center px-4 py-3 rounded-lg">
+                    <div class="w-7 h-7 mr-3 rounded-lg flex items-center justify-center">
+                        <div class="w-4 h-4 bg-red-600 rounded-sm"></div>
+                    </div>
+                    <span class="text-lg font-semibold text-red-600">Home</span>
+                </div>
+                
+                <div class="mobile-nav-item flex items-center px-4 py-3 rounded-lg">
+                    <div class="w-7 h-7 mr-3 rounded-lg flex items-center justify-center">
+                        <div class="w-5 h-4 border border-white rounded-sm"></div>
+                    </div>
+                    <span class="text-lg font-semibold text-white">Projects</span>
+                </div>
+                
+                <div class="mobile-nav-item flex items-center px-4 py-3 rounded-lg">
+                    <div class="w-7 h-7 mr-3 rounded-lg flex items-center justify-center">
+                        <div class="w-4 h-4 bg-white rounded-full"></div>
+                    </div>
+                    <span class="text-lg font-semibold text-white">Plan</span>
+                </div>
+                
+                <div class="mobile-nav-item flex items-center px-4 py-3 rounded-lg">
+                    <div class="w-7 h-7 mr-3 rounded-lg flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full mb-1"></div>
+                        <div class="w-4 h-1 bg-white rounded-full"></div>
+                    </div>
+                    <span class="text-lg font-semibold text-white">Settings</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Chat Widget -->
+        <div id="chatWidget" class="fixed bottom-32 lg:bottom-6 right-6 z-40">
+            <button id="chatToggle" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-full shadow-lg transition-all hover:scale-105" onclick="toggleChat()">
+                <div class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            </button>
+            
+            <div id="chatWindow" class="absolute bottom-16 right-0 w-80 bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 hidden">
+                <div class="p-4 border-b border-gray-800">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-white">Need help with your mix?</h4>
+                        <button onclick="toggleChat()" class="text-gray-400 hover:text-white">✕</button>
+                    </div>
+                </div>
+                
+                <div class="p-4 h-64 overflow-y-auto">
+                    <div class="space-y-3">
+                        <div class="bg-red-600 rounded-2xl p-3 max-w-xs">
+                            <p class="text-white text-sm">Hi! I'm here to help with any questions about your projects. How can I assist you today?</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t border-gray-800">
+                    <div class="flex space-x-2">
+                        <input type="text" placeholder="Type your message..." class="flex-1 bg-gray-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-red-600">
+                        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('projectsSection').classList.add('hidden');
+            document.getElementById('projectDetail').classList.add('hidden');
+            document.getElementById('engineersSection').classList.add('hidden');
+
+            // Update sidebar active states
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Update mobile nav active states
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const icon = item.querySelector('div div');
+                const text = item.querySelector('span');
+                if (icon && icon.classList.contains('bg-red-600')) {
+                    icon.classList.remove('bg-red-600');
+                    icon.classList.add('bg-white');
+                }
+                text.classList.remove('text-red-600');
+                text.classList.add('text-white');
+            });
+
+            // Show selected section and update title
+            if (section === 'home') {
+                document.getElementById('homeSection').classList.remove('hidden');
+                const desktopBtn = document.querySelector('[onclick="showSection(\'home\')"]');
+                if (desktopBtn) desktopBtn.classList.add('active');
+                
+                // Update mobile nav
+                const mobileBtn = document.getElementById('mobileHomeBtn');
+                mobileBtn.classList.add('active');
+                const icon = mobileBtn.querySelector('div div');
+                const text = mobileBtn.querySelector('span');
+                icon.classList.add('bg-red-600');
+                icon.classList.remove('bg-white');
+                text.classList.add('text-red-600');
+                text.classList.remove('text-white');
+            } else if (section === 'projects') {
+                document.getElementById('projectsSection').classList.remove('hidden');
+                const desktopBtn = document.querySelector('[onclick="showSection(\'projects\')"]');
+                if (desktopBtn) desktopBtn.classList.add('active');
+                
+                // Update mobile nav
+                const mobileBtn = document.getElementById('mobileProjectsBtn');
+                mobileBtn.classList.add('active');
+                const icon = mobileBtn.querySelector('div div');
+                const text = mobileBtn.querySelector('span');
+                icon.classList.add('border-red-600');
+                icon.classList.remove('border-white');
+                text.classList.add('text-red-600');
+                text.classList.remove('text-white');
+            } else if (section === 'engineers') {
+                document.getElementById('engineersSection').classList.remove('hidden');
+                const desktopBtn = document.querySelector('[onclick="showSection(\'engineers\')"]');
+                if (desktopBtn) desktopBtn.classList.add('active');
+            }
+        }
+
+        function showPlanSection() {
+            // Update mobile nav active states
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const icon = item.querySelector('div div');
+                const text = item.querySelector('span');
+                if (icon && icon.classList.contains('bg-red-600')) {
+                    icon.classList.remove('bg-red-600');
+                    icon.classList.add('bg-white');
+                }
+                text.classList.remove('text-red-600');
+                text.classList.add('text-white');
+            });
+
+            // Show home section but highlight plan
+            showSection('home');
+            
+            // Update mobile nav for plan
+            const mobileBtn = document.getElementById('mobilePlanBtn');
+            mobileBtn.classList.add('active');
+            const icon = mobileBtn.querySelector('div div');
+            const text = mobileBtn.querySelector('span');
+            icon.classList.add('bg-red-600');
+            icon.classList.remove('bg-white');
+            text.classList.add('text-red-600');
+            text.classList.remove('text-white');
+            
+            // Scroll to plan section
+            setTimeout(() => {
+                const planSection = document.querySelector('.bg-gradient-to-r');
+                if (planSection) {
+                    planSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+
+        function showSettingsSection() {
+            // Update mobile nav active states
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const icon = item.querySelector('div div');
+                const text = item.querySelector('span');
+                if (icon && icon.classList.contains('bg-red-600')) {
+                    icon.classList.remove('bg-red-600');
+                    icon.classList.add('bg-white');
+                }
+                text.classList.remove('text-red-600');
+                text.classList.add('text-white');
+            });
+
+            // Update mobile nav for settings
+            const mobileBtn = document.getElementById('mobileSettingsBtn');
+            mobileBtn.classList.add('active');
+            const icon = mobileBtn.querySelector('div div');
+            const text = mobileBtn.querySelector('span');
+            icon.classList.add('bg-red-600');
+            icon.classList.remove('bg-white');
+            text.classList.add('text-red-600');
+            text.classList.remove('text-white');
+            
+            alert('Settings section coming soon!');
+        }
+
+        function showProjectTab(tab) {
+            // Update tab styles
+            document.getElementById('mixingTab').classList.remove('text-custom-red', 'bg-custom-red', 'bg-opacity-10');
+            document.getElementById('mixingTab').classList.add('text-white');
+            document.getElementById('masteringTab').classList.remove('text-custom-red', 'bg-custom-red', 'bg-opacity-10');
+            document.getElementById('masteringTab').classList.add('text-white');
+
+            // Hide all project lists
+            document.getElementById('mixingProjects').classList.add('hidden');
+            document.getElementById('masteringProjects').classList.add('hidden');
+
+            // Show selected tab
+            if (tab === 'mixing') {
+                document.getElementById('mixingTab').classList.add('text-custom-red', 'bg-custom-red', 'bg-opacity-10');
+                document.getElementById('mixingTab').classList.remove('text-white');
+                document.getElementById('mixingProjects').classList.remove('hidden');
+            } else if (tab === 'mastering') {
+                document.getElementById('masteringTab').classList.add('text-custom-red', 'bg-custom-red', 'bg-opacity-10');
+                document.getElementById('masteringTab').classList.remove('text-white');
+                document.getElementById('masteringProjects').classList.remove('hidden');
+            }
+        }
+
+        function openProject(projectId) {
+            document.getElementById('projectsSection').classList.add('hidden');
+            document.getElementById('projectDetail').classList.remove('hidden');
+        }
+
+        function openChat() {
+            showSection('engineers');
+        }
+
+
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex';
+                messageDiv.innerHTML = `
+                    <div class="chat-message bg-card rounded-2xl p-6 ml-auto">
+                        <p class="text-white font-semibold text-lg">${message}</p>
+                        <span class="text-white text-sm opacity-60">Just now</span>
+                    </div>
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                input.value = '';
+            }
+        }
+
+        // Handle Enter key in chat
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+
+
+        // Notifications functions
+        function toggleNotifications() {
+            const sidebar = document.getElementById('notificationsSidebar');
+            if (sidebar.classList.contains('translate-x-full')) {
+                sidebar.classList.remove('translate-x-full');
+            } else {
+                sidebar.classList.add('translate-x-full');
+            }
+        }
+
+        // Chat widget functions
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('hidden');
+        }
+
+        // Button functions
+        function startNewProject() {
+            alert('Starting a new project! This would open the project creation wizard.');
+        }
+
+        function uploadFiles() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.accept = 'audio/*';
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    alert(`Selected ${files.length} file(s): ${files.map(f => f.name).join(', ')}`);
+                }
+            };
+            input.click();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c1f15c06ebd1fa',t:'MTc2MDA1NTUzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+      </p>
+    </div>
+  </code>
+</pre>
