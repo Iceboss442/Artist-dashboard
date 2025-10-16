@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Dashboard — Artist Theme</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1720;
+      --card:#0f1728;
+      --muted:#9aa4b2;
+      --accent:#7c5cff;
+      --accent-2:#22c1c3;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+      --success: #2ecc71;
+      --danger: #ff6b6b;
+      --radius: 10px;
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color-scheme: dark;
+    }
+    html,body{height:100%; margin:0; background:
+      linear-gradient(180deg, rgba(12,16,22,1) 0%, rgba(7,10,14,1) 100%); color:#e6eef6;}
+    .app{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:24px;
+      min-height:100vh;
+      padding:28px;
+      box-sizing:border-box;
+    }
+
+    /* SIDEBAR */
+    .sidebar{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.6), inset 0 1px rgba(255,255,255,0.02);
+      min-height:calc(100vh - 56px);
+    }
+    .brand{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo{
+      width:44px; height:44px; border-radius:8px;
+      background: linear-gradient(135deg,var(--accent), #5bd0ff);
+      box-shadow: 0 6px 18px rgba(124,92,255,0.15);
+      display:flex; align-items:center; justify-content:center; font-weight:800; color:white;
+      font-size:14px;
+    }
+    .brand h1{font-size:14px; margin:0}
+    .nav{display:flex; flex-direction:column; gap:6px; margin-top:6px}
+    .nav a{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:10px 12px; text-decoration:none; color:var(--muted); border-radius:8px;
+      font-weight:600; font-size:13px;
+    }
+    .nav a.active{background:linear-gradient(90deg, rgba(124,92,255,0.12), rgba(34,193,195,0.03)); color:#e9f0ff;}
+    .nav a:hover{background:var(--glass); color:#fff}
+    .sidebar .pro{
+      background: linear-gradient(90deg, rgba(124,92,255,0.12), rgba(34,193,195,0.03));
+      padding:10px; border-radius:8px; font-size:13px; color:#fff; text-align:center;
+    }
+
+    /* MAIN */
+    .main{
+      display:flex; flex-direction:column; gap:20px;
+    }
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center; gap:16px;
+    }
+    .search{
+      display:flex; gap:10px; align-items:center; background:var(--glass); padding:10px; border-radius:12px;
+      width:520px;
+    }
+    .search input{background:transparent;border:0;outline:none;color:#e6eef6; width:100%}
+    .stats{
+      display:flex; gap:14px; align-items:center;
+    }
+    .stat{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:12px 16px; border-radius:12px; min-width:140px; text-align:center;
+    }
+    .stat h3{margin:0; font-size:18px}
+    .stat p{margin:6px 0 0; color:var(--muted); font-size:13px}
+
+    /* GRID of panels */
+    .grid{
+      display:grid; grid-template-columns: 1.2fr 0.8fr; gap:18px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px; padding:16px; box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+    }
+    .card h2{margin:0 0 12px 0; font-size:16px}
+    .projects-list, .users-table, .disputes-list{display:flex; flex-direction:column; gap:10px}
+
+    /* list items */
+    .proj{
+      display:flex; justify-content:space-between; gap:12px; padding:10px; border-radius:10px; background:var(--glass-2);
+      align-items:center;
+    }
+    .proj .left{display:flex; gap:12px; align-items:center}
+    .avatar{
+      width:46px; height:46px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700;
+      background:linear-gradient(135deg,#2b2f45, rgba(255,255,255,0.02)); color:#fff;
+    }
+    .tag{
+      padding:6px 8px; border-radius:999px; font-size:12px; font-weight:700;
+    }
+    .tag.green{background:rgba(34,197,94,0.12); color:#7ef0a0}
+    .tag.yellow{background:rgba(255,195,60,0.08); color:#ffd479}
+    .tag.red{background:rgba(255,100,100,0.06); color:#ffb4b4}
+    .proj .meta{color:var(--muted); font-size:13px}
+
+    /* users table */
+    table{width:100%; border-collapse:collapse; color:#e6eef6}
+    th,td{padding:10px 8px; text-align:left; font-size:13px}
+    thead th{color:var(--muted); font-weight:600; font-size:12px}
+    tr.row{background:var(--glass-2); border-radius:8px}
+    .actions button{margin-right:8px}
+
+    /* disputes */
+    .dispute{display:flex; justify-content:space-between; padding:12px; border-radius:10px; background:var(--glass-2)}
+    .dispute .info{max-width:70%}
+
+    /* small util */
+    .muted{color:var(--muted); font-size:13px}
+    .btn{
+      background:linear-gradient(90deg,var(--accent), #5bd0ff); color:#041025; padding:8px 12px; border-radius:10px; border:0; font-weight:700; cursor:pointer;
+    }
+    .btn.ghost{background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.03)}
+    .btn.danger{background:linear-gradient(90deg,#ff6b6b,#ff9b9b); color:#081018}
+    .flex{display:flex; gap:10px; align-items:center}
+
+    /* modal */
+    .modal-backdrop{position:fixed; inset:0; background:rgba(2,6,23,0.7); display:none; align-items:center; justify-content:center; z-index:60}
+    .modal{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px; border-radius:12px; width:720px; max-width:95%}
+    .form-row{display:flex; gap:10px}
+    input,select,textarea{background:transparent; border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:8px; color:#e6eef6; outline:none; width:100%}
+    textarea{min-height:100px; resize:vertical}
+    .small{font-size:13px; color:var(--muted)}
+    .empty{padding:24px; color:var(--muted); text-align:center}
+
+    /* responsiveness */
+    @media (max-width:900px){
+      .app{grid-template-columns:1fr; padding:16px}
+      .grid{grid-template-columns:1fr}
+      .search{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="logo">SI</div>
+        <div>
+          <h1>Silkk Admin</h1>
+          <div class="muted" style="font-size:12px">Platform admin</div>
+        </div>
+      </div>
+
+      <div class="pro">Pro • Unlimited</div>
+
+      <nav class="nav" role="navigation" aria-label="Sections">
+        <a href="#" class="active" data-section="overview">Overview</a>
+        <a href="#" data-section="users">Manage Users</a>
+        <a href="#" data-section="projects">Project Queues</a>
+        <a href="#" data-section="disputes">Disputes</a>
+        <a href="#" data-section="settings">Settings</a>
+      </nav>
+
+      <div style="margin-top:auto; font-size:13px" class="muted">Logged in as <strong>Admin</strong></div>
+    </aside>
+
+    <main class="main" role="main">
+      <div class="topbar">
+        <div style="display:flex; align-items:center; gap:12px">
+          <div style="font-size:20px; font-weight:700">Dashboard</div>
+          <div class="muted">Overview & management</div>
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center">
+          <div class="search" role="search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#9aa4b2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#9aa4b2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="globalSearch" placeholder="Search users, projects, disputes..." aria-label="Search"/>
+          </div>
+          <div class="stats">
+            <div class="stat"><h3 id="statUsers">0</h3><p>Users</p></div>
+            <div class="stat"><h3 id="statProjects">0</h3><p>Projects</p></div>
+            <div class="stat"><h3 id="statDisputes">0</h3><p>Open Disputes</p></div>
+          </div>
+        </div>
+      </div>
+
+      <section class="grid">
+        <!-- LEFT: Projects -->
+        <div class="card" id="panel-overview">
+          <h2>Quick Overview</h2>
+          <div style="display:flex; gap:12px; margin-bottom:12px">
+            <div style="flex:1">
+              <div style="font-size:13px; color:var(--muted)">Recent Projects</div>
+              <div class="projects-list" id="projectsList">
+                <!-- populated by JS -->
+              </div>
+            </div>
+
+            <div style="width:320px">
+              <div style="display:flex; justify-content:space-between; align-items:center">
+                <div style="font-size:13px; color:var(--muted)">Quick Actions</div>
+                <div><button class="btn" id="btnNewUser">+ New User</button></div>
+              </div>
+
+              <div style="margin-top:12px; display:flex; flex-direction:column; gap:8px">
+                <button class="btn ghost" id="btnCreateProject">Create Project</button>
+                <button class="btn ghost" id="btnOpenQueues">Open Queues</button>
+                <button class="btn ghost" id="btnViewDisputes">View Disputes</button>
+              </div>
+            </div>
+          </div>
+
+          <hr style="border:none; height:1px; background:rgba(255,255,255,0.02); margin:12px 0">
+
+          <h2 style="margin-top:8px">Activity Feed</h2>
+          <div class="empty" id="activityFeed">No recent activity (mock data)</div>
+        </div>
+
+        <!-- RIGHT: Management panels -->
+        <div style="display:flex; flex-direction:column; gap:18px">
+          <!-- Users -->
+          <div class="card" id="panel-users" style="display:none">
+            <h2>Manage Users</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+              <div class="muted">Search / filter users</div>
+              <div class="flex">
+                <select id="filterRole">
+                  <option value="">All roles</option>
+                  <option value="artist">Artist</option>
+                  <option value="engineer">Engineer</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <button class="btn ghost" id="refreshUsers">Refresh</button>
+              </div>
+            </div>
+
+            <div style="overflow:auto">
+              <table>
+                <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+                <tbody id="usersTbody"></tbody>
+              </table>
+            </div>
+            <div class="muted" style="margin-top:10px">Tip: click Edit to change role/status, or Delete to remove user.</div>
+          </div>
+
+          <!-- Project Queues -->
+          <div class="card" id="panel-projects" style="display:none">
+            <h2>Project Queues</h2>
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:12px">
+              <div class="flex">
+                <select id="queueFilter">
+                  <option value="">All statuses</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="review">Under Review</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <input id="projectSearch" placeholder="Search project..." />
+              </div>
+
+              <div>
+                <button class="btn ghost" id="btnAssign">Assign Engineer</button>
+                <button class="btn" id="btnBulkResolve">Mark Completed</button>
+              </div>
+            </div>
+
+            <div style="overflow:auto; max-height:420px">
+              <div id="projectsTable">
+                <!-- populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Disputes -->
+          <div class="card" id="panel-disputes" style="display:none">
+            <h2>Handle Disputes</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+              <div class="muted">Open disputes require review</div>
+              <div class="flex">
+                <select id="disputeFilter">
+                  <option value="">All</option>
+                  <option value="open">Open</option>
+                  <option value="escalated">Escalated</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+                <button class="btn ghost" id="refreshDisputes">Refresh</button>
+              </div>
+            </div>
+
+            <div class="disputes-list" id="disputesList">
+              <!-- populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL BACKDROP -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-hidden="true">
+    <div class="modal" role="document" aria-modal="true" aria-labelledby="modalTitle">
+      <div id="modalContent">
+        <!-- dynamic -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /***** Mock data (replace with API calls) *****/
+    const users = [
+      {id:1, name:"Alex Morgan", email:"alex@example.com", role:"artist", status:"active", joined:"2024-09-10"},
+      {id:2, name:"Sarah Johnson", email:"sarah@studio.com", role:"engineer", status:"active", joined:"2024-08-21"},
+      {id:3, name:"Mike Chen", email:"mike@studio.com", role:"engineer", status:"suspended", joined:"2024-07-03"},
+      {id:4, name:"Lisa Rodriguez", email:"lisa@studio.com", role:"artist", status:"active", joined:"2024-06-05"},
+    ];
+
+    const projects = [
+      {id:101, title:"Midnight Rain", engineer:"Joy", status:"in-progress", started:"2025-09-12", due:"2025-10-18", owner:"Alex Morgan"},
+      {id:102, title:"Electric Nights", engineer:"Mike Chen", status:"review", started:"2025-09-08", due:"2025-10-17", owner:"Alex Morgan"},
+      {id:103, title:"Summer Vibes", engineer:"Lisa Rodriguez", status:"completed", started:"2025-07-01", due:"2025-07-20", owner:"Alex Morgan"},
+      {id:104, title:"Echoes", engineer:"Joy", status:"delivered", started:"2025-10-01", due:"2025-10-06", owner:"Eve Kaine"},
+      // more...
+    ];
+
+    const disputes = [
+      {id:201, projectId:102, title:"Mix too loud - rejection", status:"open", raisedBy:"Alex Morgan", created:"2025-10-10", details:"Client says vocals are buried."},
+      {id:202, projectId:104, title:"Missing stems", status:"escalated", raisedBy:"Eve Kaine", created:"2025-10-12", details:"Files missing for verse 2."},
+    ];
+
+    /***** Helpers *****/
+    const qs = sel => document.querySelector(sel);
+    const qsa = sel => document.querySelectorAll(sel);
+
+    function formatDate(d){
+      const D = new Date(d);
+      if(isNaN(D)) return d;
+      return D.toLocaleDateString();
+    }
+
+    /***** Render functions *****/
+    function renderStats(){
+      qs('#statUsers').textContent = users.length;
+      qs('#statProjects').textContent = projects.length;
+      qs('#statDisputes').textContent = disputes.filter(d=>d.status==='open').length;
+    }
+
+    function renderProjectsList(){
+      const el = qs('#projectsList');
+      el.innerHTML = '';
+      const recent = projects.slice(0,6);
+      recent.forEach(p=>{
+        const div = document.createElement('div'); div.className='proj';
+        div.innerHTML = `
+          <div class="left">
+            <div class="avatar">${p.title.split(' ').map(s=>s[0]).slice(0,2).join('')}</div>
+            <div>
+              <div style="font-weight:700">${p.title}</div>
+              <div class="meta">${p.engineer} • Due ${formatDate(p.due)}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="tag ${p.status==='completed'?'green': p.status==='review'?'yellow':'red'}">${p.status}</div>
+            <div class="muted" style="font-size:12px; margin-top:6px">Owner: ${p.owner}</div>
+          </div>
+        `;
+        el.appendChild(div);
+      });
+    }
+
+    function renderUsersTable(filterRole = ''){
+      const tbody = qs('#usersTbody');
+      tbody.innerHTML = '';
+      const list = users.filter(u => !filterRole || u.role === filterRole);
+      if(list.length === 0){
+        tbody.innerHTML = `<tr class="row"><td colspan="5" class="empty">No users found</td></tr>`;
+        return;
+      }
+      list.forEach(u=>{
+        const tr = document.createElement('tr'); tr.className='row';
+        tr.innerHTML = `
+          <td><strong>${u.name}</strong><div class="small muted">${u.joined}</div></td>
+          <td>${u.email}</td>
+          <td style="text-transform:capitalize">${u.role}</td>
+          <td>${u.status === 'active' ? '<span class="tag green">active</span>' : '<span class="tag red">suspended</span>'}</td>
+          <td style="text-align:right" class="actions">
+            <button class="btn ghost" data-action="edit" data-id="${u.id}">Edit</button>
+            <button class="btn danger" data-action="delete" data-id="${u.id}">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderProjectsPanel(filterStatus = '', search = ''){
+      const wrp = qs('#projectsTable'); wrp.innerHTML = '';
+      const filtered = projects.filter(p => {
+        return (!filterStatus || p.status === filterStatus) &&
+               (!search || p.title.toLowerCase().includes(search.toLowerCase()));
+      });
+      if(filtered.length === 0){
+        wrp.innerHTML = `<div class="empty">No projects in this queue</div>`;
+        return;
+      }
+      filtered.forEach(p=>{
+        const d = document.createElement('div'); d.className='proj'; d.style.marginBottom='10px';
+        d.innerHTML = `
+          <div class="left">
+            <div class="avatar">${p.title.split(' ').map(s=>s[0]).slice(0,2).join('')}</div>
+            <div>
+              <div style="font-weight:700">${p.title}</div>
+              <div class="meta">Engineer: ${p.engineer} • Owner: ${p.owner}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="tag ${p.status==='completed'?'green': p.status==='review'?'yellow':'red'}" style="margin-bottom:8px">${p.status}</div>
+            <div class="muted">${formatDate(p.due)}</div>
+            <div style="margin-top:8px">
+              <button class="btn ghost" data-action="view" data-id="${p.id}">View</button>
+              <button class="btn" data-action="complete" data-id="${p.id}">Complete</button>
+            </div>
+          </div>
+        `;
+        wrp.appendChild(d);
+      });
+    }
+
+    function renderDisputesPanel(filterStatus=''){
+      const wrp = qs('#disputesList'); wrp.innerHTML = '';
+      const filtered = disputes.filter(d => !filterStatus || d.status === filterStatus);
+      if(filtered.length === 0){
+        wrp.innerHTML = '<div class="empty">No disputes</div>'; return;
+      }
+      filtered.forEach(d=>{
+        const item = document.createElement('div'); item.className='dispute';
+        item.innerHTML = `
+          <div class="info">
+            <div style="font-weight:700">${d.title} <span class="small muted">#${d.id}</span></div>
+            <div class="muted" style="margin-top:6px">Project: ${d.projectId} • Raised by ${d.raisedBy} • ${formatDate(d.created)}</div>
+            <div style="margin-top:8px" class="small">${d.details}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="muted" style="margin-bottom:8px">${d.status}</div>
+            <div>
+              ${d.status !== 'resolved' ? `<button class="btn ghost" data-action="review" data-id="${d.id}">Review</button>
+              <button class="btn danger" data-action="resolve" data-id="${d.id}">Resolve</button>` :
+              `<button class="btn ghost" data-action="view" data-id="${d.id}">View</button>`}
+            </div>
+          </div>
+        `;
+        wrp.appendChild(item);
+      });
+    }
+
+    /***** Modal handling *****/
+    const modalB = qs('#modalBackdrop');
+    function openModal(html){
+      qs('#modalContent').innerHTML = html;
+      modalB.style.display = 'flex';
+      modalB.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){
+      modalB.style.display = 'none';
+      modalB.setAttribute('aria-hidden','true');
+      qs('#modalContent').innerHTML = '';
+    }
+
+    modalB.addEventListener('click', (e)=>{
+      if(e.target === modalB) closeModal();
+    });
+
+    /***** Event wiring *****/
+    function setupEvents(){
+      // navigation
+      qsa('.nav a').forEach(a=>{
+        a.addEventListener('click', (ev)=>{
+          ev.preventDefault();
+          qsa('.nav a').forEach(x=>x.classList.remove('active'));
+          a.classList.add('active');
+          const sec = a.dataset.section;
+          qs('#panel-overview').style.display = sec === 'overview' ? 'block' : 'none';
+          qs('#panel-users').style.display = sec === 'users' ? 'block' : 'none';
+          qs('#panel-projects').style.display = sec === 'projects' ? 'block' : 'none';
+          qs('#panel-disputes').style.display = sec === 'disputes' ? 'block' : 'none';
+        });
+      });
+
+      // global search
+      qs('#globalSearch').addEventListener('input', (e)=>{
+        const q = e.target.value.trim().toLowerCase();
+        // filter users/projects/disputes locally
+        renderUsersTable();
+        renderProjectsPanel('', q);
+        renderDisputesPanel();
+      });
+
+      // users: filter and actions
+      qs('#filterRole').addEventListener('change', (e)=> renderUsersTable(e.target.value));
+      qs('#refreshUsers').addEventListener('click', ()=> renderUsersTable(qs('#filterRole').value));
+
+      qs('#usersTbody').addEventListener('click', (e)=>{
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const id = Number(btn.dataset.id);
+        const action = btn.dataset.action;
+        const user = users.find(u=>u.id===id);
+        if(action === 'edit'){
+          openModal(`
+            <h3 id="modalTitle">Edit User — ${user.name}</h3>
+            <div style="margin-top:12px">
+              <div class="form-row" style="margin-bottom:8px">
+                <input id="editName" value="${user.name}" />
+                <input id="editEmail" value="${user.email}" />
+              </div>
+              <div class="form-row" style="margin-bottom:8px">
+                <select id="editRole">
+                  <option ${user.role==='artist'?'selected':''} value="artist">Artist</option>
+                  <option ${user.role==='engineer'?'selected':''} value="engineer">Engineer</option>
+                  <option ${user.role==='admin'?'selected':''} value="admin">Admin</option>
+                </select>
+                <select id="editStatus">
+                  <option ${user.status==='active'?'selected':''} value="active">Active</option>
+                  <option ${user.status==='suspended'?'selected':''} value="suspended">Suspended</option>
+                </select>
+              </div>
+              <div style="display:flex; justify-content:flex-end; gap:8px">
+                <button class="btn ghost" id="cancelEdit">Cancel</button>
+                <button class="btn" id="saveEdit">Save</button>
+              </div>
+            </div>
+          `);
+          qs('#cancelEdit').onclick = closeModal;
+          qs('#saveEdit').onclick = ()=>{
+            user.name = qs('#editName').value;
+            user.email = qs('#editEmail').value;
+            user.role = qs('#editRole').value;
+            user.status = qs('#editStatus').value;
+            renderUsersTable(qs('#filterRole').value);
+            renderStats();
+            closeModal();
+          };
+        } else if(action === 'delete'){
+          openModal(`
+            <h3 id="modalTitle">Delete User</h3>
+            <div style="margin-top:12px">
+              <div class="muted">Are you sure you want to delete <strong>${user.name}</strong>? This action cannot be undone.</div>
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px">
+                <button class="btn ghost" id="cancelDel">Cancel</button>
+                <button class="btn danger" id="confirmDel">Delete</button>
+              </div>
+            </div>
+          `);
+          qs('#cancelDel').onclick = closeModal;
+          qs('#confirmDel').onclick = ()=>{
+            const idx = users.findIndex(u=>u.id===id); if(idx>-1) users.splice(idx,1);
+            renderUsersTable(qs('#filterRole').value);
+            renderStats();
+            closeModal();
+          };
+        }
+      });
+
+      // new user
+      qs('#btnNewUser').addEventListener('click', ()=>{
+        openModal(`
+          <h3 id="modalTitle">Create New User</h3>
+          <div style="margin-top:12px">
+            <div class="form-row" style="margin-bottom:8px">
+              <input id="newName" placeholder="Full name" />
+              <input id="newEmail" placeholder="Email" />
+            </div>
+            <div class="form-row" style="margin-bottom:8px">
+              <select id="newRole">
+                <option value="artist">Artist</option>
+                <option value="engineer">Engineer</option>
+                <option value="admin">Admin</option>
+              </select>
+              <select id="newStatus">
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px">
+              <button class="btn ghost" id="cancelNew">Cancel</button>
+              <button class="btn" id="createNew">Create</button>
+            </div>
+          </div>
+        `);
+        qs('#cancelNew').onclick = closeModal;
+        qs('#createNew').onclick = ()=>{
+          const id = Math.max(0,...users.map(u=>u.id))+1;
+          users.unshift({
+            id,
+            name: qs('#newName').value || 'Untitled',
+            email: qs('#newEmail').value || 'no-reply@example.com',
+            role: qs('#newRole').value,
+            status: qs('#newStatus').value,
+            joined: new Date().toISOString().split('T')[0]
+          });
+          renderUsersTable(qs('#filterRole').value);
+          renderStats();
+          closeModal();
+        };
+      });
+
+      // projects panel events (delegated)
+      qs('#projectsTable').addEventListener('click', (e)=>{
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const id = Number(btn.dataset.id);
+        const action = btn.dataset.action;
+        const project = projects.find(p=>p.id===id);
+        if(action === 'view'){
+          openModal(`<h3 id="modalTitle">${project.title}</h3>
+            <div style="margin-top:8px" class="small muted">Engineer: ${project.engineer} • Owner: ${project.owner}</div>
+            <div style="margin-top:12px">
+              <div class="muted">Started: ${formatDate(project.started)} • Due: ${formatDate(project.due)}</div>
+              <div style="margin-top:12px">${project.status}</div>
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px">
+                <button class="btn ghost" onclick="closeModal()">Close</button>
+              </div>
+            </div>`);
+        } else if(action === 'complete'){
+          project.status = 'completed';
+          renderProjectsPanel(qs('#queueFilter').value, qs('#projectSearch').value);
+          renderStats();
+        }
+      });
+
+      // assign/complete buttons
+      qs('#btnAssign').addEventListener('click', ()=>{
+        openModal(`<h3 id="modalTitle">Assign Engineer (bulk)</h3>
+          <div style="margin-top:10px">
+            <div class="small muted">Pick an engineer to assign to all filtered projects</div>
+            <div style="margin-top:8px" class="form-row">
+              <select id="bulkEngineer">${users.filter(u=>u.role==='engineer').map(e=>`<option value="${e.name}">${e.name}</option>`).join('')}</select>
+              <div></div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px">
+              <button class="btn ghost" onclick="closeModal()">Cancel</button>
+              <button class="btn" id="confirmAssign">Assign</button>
+            </div>
+          </div>`);
+        qs('#confirmAssign').onclick = ()=>{
+          const eng = qs('#bulkEngineer').value;
+          const filterStatus = qs('#queueFilter').value;
+          projects.forEach(p=>{
+            if(!filterStatus || p.status === filterStatus) p.engineer = eng;
+          });
+          renderProjectsPanel(filterStatus, qs('#projectSearch').value);
+          closeModal();
+        };
+      });
+
+      qs('#btnBulkResolve').addEventListener('click', ()=>{
+        const filterStatus = qs('#queueFilter').value;
+        projects.forEach(p=>{
+          if(!filterStatus || p.status === filterStatus) p.status = 'completed';
+        });
+        renderProjectsPanel(filterStatus, qs('#projectSearch').value);
+        renderStats();
+      });
+
+      // project filters
+      qs('#queueFilter').addEventListener('change', (e)=> renderProjectsPanel(e.target.value, qs('#projectSearch').value));
+      qs('#projectSearch').addEventListener('input', (e)=> renderProjectsPanel(qs('#queueFilter').value, e.target.value));
+
+      // disputes
+      qs('#disputeFilter').addEventListener('change', (e)=> renderDisputesPanel(e.target.value));
+      qs('#disputesList').addEventListener('click', (e)=>{
+        const btn = e.target.closest('button'); if(!btn) return;
+        const id = Number(btn.dataset.id); const action = btn.dataset.action;
+        const d = disputes.find(x=>x.id===id);
+        if(action === 'review' || action === 'view'){
+          openModal(`<h3 id="modalTitle">${d.title}</h3>
+            <div style="margin-top:8px" class="small muted">Project ${d.projectId} • Raised by ${d.raisedBy}</div>
+            <div style="margin-top:12px">${d.details}</div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px">
+              ${d.status !== 'resolved' ? `<button class="btn ghost" id="escalateBtn">Escalate</button>` : ''}
+              <button class="btn ghost" onclick="closeModal()">Close</button>
+              ${d.status !== 'resolved' ? `<button class="btn danger" id="resolveBtn">Resolve</button>` : ''}
+            </div>
+          `);
+          if(qs('#resolveBtn')) qs('#resolveBtn').onclick = ()=>{
+            d.status = 'resolved'; renderDisputesPanel(qs('#disputeFilter').value); renderStats(); closeModal();
+          };
+          if(qs('#escalateBtn')) qs('#escalateBtn').onclick = ()=>{
+            d.status = 'escalated'; renderDisputesPanel(qs('#disputeFilter').value); closeModal();
+          };
+        } else if(action === 'resolve'){
+          d.status = 'resolved'; renderDisputesPanel(qs('#disputeFilter').value); renderStats();
+        }
+      });
+
+      // quick topbar buttons
+      qs('#btnCreateProject').addEventListener('click', ()=>{
+        openModal(`<h3 id="modalTitle">Create Project</h3>
+          <div style="margin-top:8px">
+            <input id="projTitle" placeholder="Project title" />
+            <div style="display:flex; gap:8px; margin-top:8px">
+              <select id="projEngineer">${users.filter(u=>u.role==='engineer').map(e=>`<option value="${e.name}">${e.name}</option>`).join('')}</select>
+              <input id="projOwner" placeholder="Owner (artist)" />
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px">
+              <button class="btn ghost" onclick="closeModal()">Cancel</button>
+              <button class="btn" id="createProj">Create</button>
+            </div>
+          </div>`);
+        qs('#createProj').onclick = ()=>{
+          projects.unshift({
+            id: Math.max(0,...projects.map(p=>p.id))+1,
+            title: qs('#projTitle').value || 'Untitled',
+            engineer: qs('#projEngineer').value,
+            status: 'in-progress',
+            started: new Date().toISOString().split('T')[0],
+            due: new Date(Date.now() + 7*24*3600*1000).toISOString().split('T')[0],
+            owner: qs('#projOwner').value || 'Unknown'
+          });
+          renderProjectsPanel(qs('#queueFilter').value, qs('#projectSearch').value);
+          renderProjectsList();
+          renderStats();
+          closeModal();
+        };
+      });
+
+      qs('#btnOpenQueues').addEventListener('click', ()=> {
+        qsa('.nav a').forEach(a=> a.classList.remove('active'));
+        const link = [...qsa('.nav a')].find(a=>a.dataset.section==='projects');
+        if(link) { link.classList.add('active'); link.click(); }
+      });
+
+      qs('#btnViewDisputes').addEventListener('click', ()=>{
+        qsa('.nav a').forEach(a=> a.classList.remove('active'));
+        const link = [...qsa('.nav a')].find(a=>a.dataset.section==='disputes');
+        if(link) { link.classList.add('active'); link.click(); }
+      });
+
+      // backdrop close with Escape
+      window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+    }
+
+    /***** Init render *****/
+    function init(){
+      renderStats();
+      renderProjectsList();
+      renderUsersTable();
+      renderProjectsPanel();
+      renderDisputesPanel();
+      setupEvents();
+    }
+    init();
+
+    // expose closeModal for inline handlers
+    window.closeModal = closeModal;
+  </script>
+</body>
+</html>
