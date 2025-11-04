@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'netflix-red': '#E50914',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         * {
             font-family: 'Poppins', sans-serif !important;
@@ -19,6 +31,16 @@
             background-color: #000000 !important;
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+        }
+        html, body {
+    -webkit-tap-highlight-color: transparent;
+}
+        body {
+          transition: opacity 0.4s ease;
+          opacity: 1;
+        }
+        body.fade-out {
+          opacity: 0;
         }
         
         h1, h2, h3, h4, h5, h6, .heading {
@@ -128,44 +150,45 @@
                 margin-left: 0 !important;
             }
         }
+
     </style>
 </head>
 <body class="bg-black text-white" style="font-family: 'Poppins', sans-serif;">
-    <div class="flex h-screen overflow-x-hidden">
+    <div class="flex">
         <!-- Sidebar -->
         <div class="w-64 bg-black flex flex-col lg:flex hidden fixed h-full z-40">
             <div class="p-8">
-                <h1 class="text-2xl font-bold custom-red">Dashboard</h1>
+                <h1 class="text-2xl font-bold custom-red">Studio Dashboard</h1>
             </div>
             
             <nav class="flex-1 p-6">
                 <ul class="space-y-4">
-                    <li><a href="#" class="sidebar-item active flex items-center p-4 text-white font-semibold" onclick="showSection('home')">
+                    <li><a href="#" class="sidebar-item active flex items-center p-4 text-white font-semibold loadLink" data-file="" onclick="showSection('home')">
                         <span class="ml-3">Home</span>
                     </a></li>
-                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold" onclick="showSection('projects')">
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold loadLink" data-file="projects.php">
                         <span class="ml-3">My Projects</span>
                     </a></li>
-                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold" onclick="showSection('engineers')">
-                        <span class="ml-3">My Engineers</span>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold loadLink" data-file="chats" onclick="showSection('engineers')">
+                        <span class="ml-3">My Chats</span>
                     </a></li>
-                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
-                        <span class="ml-3">Plan & Billing</span>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold loadLink" data-file="start_project.php">
+                        <span class="ml-3">New Projects</span>
                     </a></li>
-                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
-                        <span class="ml-3">Support</span>
+                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold loadLink" data-file="account_settings">
+                        <span class="ml-3">Account</span>
                     </a></li>
-                    <li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
+                    <!--<li><a href="#" class="sidebar-item flex items-center p-4 text-white font-semibold">
                         <span class="ml-3">Settings</span>
-                    </a></li>
+                    </a></li>-->
                 </ul>
             </nav>
             
-            <div class="p-6">
+            <!--<div class="p-6">
                 <button class="sidebar-item w-full flex items-center p-4 text-white font-semibold">
                     <span class="ml-3">Logout</span>
                 </button>
-            </div>
+            </div>-->
         </div>
 
 
@@ -178,7 +201,7 @@
             <header class="bg-black border-b border-white border-opacity-20 lg:hidden">
                 <div class="flex items-center justify-between px-4 py-4">
                     <div>
-                        <h1 class="text-4xl font-bold custom-red">Dashboard</h1>
+                        <h1 class="text-2xl font-bold custom-red">Studio Dashboard</h1>
                     </div>
                     <div class="flex items-center space-x-4">
                         <!-- Notification Bell -->
@@ -188,9 +211,85 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                             </svg>
                         </button>
+<!-- Overlay + Drawer -->
+<div id="notificationDrawer" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden z-50">
+  <!-- Drawer -->
+  <div class="absolute bottom-0 left-0 w-full bg-neutral-900 rounded-t-3xl shadow-2xl transition-transform duration-300 translate-y-full" style="height:50vh;">
+    
+    <!-- Top drag handle -->
+    <div class="w-16 h-1.5 bg-gray-600 rounded-full mx-auto mt-3 mb-4"></div>
+
+    <!-- Header -->
+    <h2 class="text-lg font-semibold text-white mb-3 text-center">Notifications</h2>
+
+    <!-- Scrollable Notifications -->
+    <div class="overflow-y-auto px-4 pb-6 h-[calc(50vh-4.5rem)] space-y-3">
+      <div class="flex items-start gap-3 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+        <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">A</div>
+        <div>
+          <p class="text-white text-sm">Alex sent you a new project file.</p>
+          <span class="text-xs text-gray-400">2 mins ago</span>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-3 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">E</div>
+        <div>
+          <p class="text-white text-sm">Engineer accepted your project request.</p>
+          <span class="text-xs text-gray-400">10 mins ago</span>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-3 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+        <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">J</div>
+        <div>
+          <p class="text-white text-sm">Your revision has been approved.</p>
+          <span class="text-xs text-gray-400">30 mins ago</span>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-3 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+        <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold">K</div>
+        <div>
+          <p class="text-white text-sm">You received a new message.</p>
+          <span class="text-xs text-gray-400">1 hour ago</span>
+        </div>
+      </div>
+
+      <!-- Add more for testing scroll -->
+      <div class="flex items-start gap-3 p-3 bg-gray-800 rounded-xl hover:bg-gray-700 transition">
+        <div class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold">L</div>
+        <div>
+          <p class="text-white text-sm">New comment on your project.</p>
+          <span class="text-xs text-gray-400">2 hours ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('notificationBtn');
+  const drawer = document.getElementById('notificationDrawer');
+  const panel = drawer.querySelector('div');
+
+  btn.addEventListener('click', () => {
+    drawer.classList.remove('hidden');
+    setTimeout(() => {
+      panel.classList.remove('translate-y-full');
+    }, 10);
+  });
+
+  drawer.addEventListener('click', (e) => {
+    if (e.target === drawer) {
+      panel.classList.add('translate-y-full');
+      setTimeout(() => drawer.classList.add('hidden'), 300);
+    }
+  });
+</script>
                         
                         <!-- Pro Badge -->
-                        <span class="bg-red-600 text-white px-4 py-3 rounded-2xl text-lg font-bold shadow-lg shadow-red-500/30">Pro</span>
+                        <span class="bg-red-600 text-white px-3 py-2 rounded-2xl text-lg font-bold shadow-lg shadow-red-500/30">Pro</span>
                         
                         <!-- Profile Avatar -->
                         <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center transition-all cursor-pointer">
@@ -203,10 +302,10 @@
             </header>
 
             <!-- Desktop Top Header -->
-            <header class="bg-black border-b border-white border-opacity-20 hidden lg:block">
+            <header class="bg-black border-white border-opacity-20 hidden lg:block">
                 <div class="flex items-center justify-between px-4 py-4">
                     <div class="lg:ml-0 ml-0">
-                        <h1 class="text-xl lg:text-2xl font-bold custom-red">Studio Dashboard</h1>
+                        <!--<h1 class="text-xl lg:text-2xl font-bold custom-red">Studio Dashboard</h1>-->
                     </div>
                     <div class="flex items-center space-x-3 lg:space-x-4">
                         <!-- Notification Bell -->
@@ -279,17 +378,21 @@
                 </div>
 
                 <!-- Hero Content -->
-                <div class="hero-content flex-1 flex items-start justify-start lg:items-center lg:justify-center px-6 lg:px-8 pt-4 lg:py-12 relative z-20" style="margin-left: 8px;">
+                <div class="hero-content flex-1 flex items-start justify-start lg:items-center lg:justify-center px-1 lg:px-8 pt-4 lg:py-12 relative z-20" style="margin-left: 8px;">
                     <div class="text-left lg:text-center max-w-5xl relative z-20">
                         <!-- Main Hero Text -->
-                        <h1 class="text-4xl sm:text-4xl md:text-4xl lg:text-6xl xl:text-7xl font-medium mb-8 md:mb-10 leading-relaxed text-left lg:text-center">
-                            <span class="text-white">Hey Alex,</span><br>
-                            <span class="text-white">Let's make something</span><br>
-                            <span class="text-red-500 relative" style="color: #E50914;">
-                                amazing today
-                                <div class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-transparent rounded-full" style="color:#E50914"></div>
-                            </span>
-                        </h1>
+                        <h1 class="text-3xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-medium mb-8 md:mb-10 leading-relaxed text-left lg:text-center ml-[5px] sm:ml-[10px]">
+    <span class="text-white">Hey Alex,</span><br>
+    <span class="text-white">Let's make something</span><br>
+    <span class="text-red-500 relative" style="color: #E50914;">
+        amazing today
+        <div class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-red-500 to-transparent rounded-full" style="color:#E50914"></div>
+    </span>
+</h1>
+
+
+
+
                         
                         <!-- Subtitle -->
                         <p class="text-lg sm:text-lg md:text-lg lg:text-base text-white text-opacity-70 mb-16 md:mb-20 leading-relaxed font-normal text-left lg:text-center">
@@ -298,10 +401,10 @@
                         
                         <!-- CTA Buttons -->
                         <div class="flex flex-col sm:flex-row gap-8 justify-start lg:justify-center items-start lg:items-center mb-12 md:mb-16 relative z-20">
-                            <button onclick="startNewProject()" class="w-full sm:w-auto bg-white hover:bg-gray-100 text-black font-bold py-6 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-xl lg:text-xl transition-all hover:scale-105 shadow-2xl shadow-white/20 hover:shadow-white/30 relative z-30 cursor-pointer">
+                            <button onclick="startNewProject()" class="w-full sm:w-auto bg-white hover:bg-gray-100 text-black font-bold py-4 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-base lg:text-xl transition-all hover:scale-105 shadow-2xl shadow-white/20 hover:shadow-white/30 relative z-30 cursor-pointer">
                                 <span class="bi bi-play-btn"></span> Start New Project
                             </button>
-                            <button onclick="uploadFiles()" class="w-full sm:w-auto bg-black border-3 border-white text-white hover:bg-white hover:text-black font-bold py-6 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-xl lg:text-xl transition-all hover:scale-105 outline outline-2 outline-white relative z-30 cursor-pointer" style="margin-bottom: 10px;">
+                            <button onclick="uploadFiles()" class="w-full sm:w-auto bg-black border-3 border-white text-white hover:bg-white hover:text-black font-bold py-4 px-12 lg:py-6 lg:px-12 rounded-2xl lg:rounded-xl text-base lg:text-xl transition-all hover:scale-105 outline outline-2 outline-white relative z-30 cursor-pointer" style="margin-bottom: 10px;">
                                 <span class="bi bi-file-earmark-check"></span> Upload Files
                             </button>
                         </div>
@@ -339,55 +442,55 @@
                     <!-- Mobile Projects Section -->
                     <div class="lg:hidden" style="margin-top: 15px;">
                         <div class="flex items-center justify-between mb-8">
-                            <h3 class="text-4xl font-bold text-white">Your Projects</h3>
-                            <span class="bg-red-600 text-white px-6 py-3 rounded-full text-xl font-bold">14</span>
+                            <h3 class="text-3xl font-bold text-white">Your Projects</h3>
+                            <span class="bg-red-600 text-white px-6 py-2 rounded-full text-base font-bold">14</span>
                         </div>
                         
                         <div class="space-y-8">
                             <!-- Mobile Project Card -->
-                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                            <div class="project-card bg-black rounded-3xl p-6 border border-white border-opacity-20">
                                 <div class="flex items-start justify-between mb-6">
                                     <div class="flex-1">
-                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Midnight Rain</h5>
-                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Joy • Due in 2 days</p>
+                                        <h5 class="font-bold text-white text-xl lg:text-xl mb-3">Midnight Rain</h5>
+                                        <p class="text-white text-opacity-60 text-base lg:text-base">Mixed by Joy • Due in 2 days</p>
                                     </div>
-                                    <span class="bg-red-600 text-white px-5 py-3 rounded-full text-base font-bold">In Progress</span>
+                                    <span class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">In Progress</span>
                                 </div>
-                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-4 lg:py-3 rounded-2xl lg:rounded-lg text-base lg:text-base transition-all border border-white">
                                     <span class="bi bi-chat-dots-fill"></span> Open Chat
                                 </button>
                             </div>
                             
                             <!-- Mobile Project Card -->
-                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                            <div class="project-card bg-black rounded-3xl p-6 border border-white border-opacity-20">
                                 <div class="flex items-start justify-between mb-6">
                                     <div class="flex-1">
-                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Electric Nights</h5>
-                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Sarah • Due in 1 day</p>
+                                        <h5 class="font-bold text-white text-xl lg:text-xl mb-3">Electric Nights</h5>
+                                        <p class="text-white text-opacity-60 text-base lg:text-base">Mixed by Sarah • Due in 1 day</p>
                                     </div>
-                                    <span class="bg-red-600 text-white px-5 py-3 rounded-full text-base font-bold">Review</span>
+                                    <span class="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">Review</span>
                                 </div>
-                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white font-bold py-4 lg:py-3 rounded-2xl lg:rounded-lg text-base lg:text-base transition-all border border-white">
                                     <span class="bi bi-chat-dots-fill"></span> Open Chat
                                 </button>
                             </div>
                             
                             <!-- Mobile Project Card -->
-                            <div class="project-card bg-black rounded-3xl p-8 border border-white border-opacity-20">
+                            <div class="project-card bg-black rounded-3xl p-6 border border-white border-opacity-20">
                                 <div class="flex items-start justify-between mb-6">
                                     <div class="flex-1">
-                                        <h5 class="font-bold text-white text-2xl lg:text-xl mb-3">Summer Vibes</h5>
-                                        <p class="text-white text-opacity-60 text-lg lg:text-base">Mixed by Lisa Rodriguez • Delivered</p>
+                                        <h5 class="font-bold text-white text-xl lg:text-xl mb-3">Summer Vibes</h5>
+                                        <p class="text-white text-opacity-60 text-base lg:text-base">Mixed by Lisa Rodriguez • Delivered</p>
                                     </div>
-                                    <span class="bg-white text-black px-5 py-3 rounded-full text-base font-bold">Done</span>
+                                    <span class="bg-white text-black px-4 py-2 rounded-full text-sm font-bold">Done</span>
                                 </div>
-                                <button class="w-full bg-black hover:bg-white hover:text-black text-white border border-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all">
+                                <button class="w-full bg-black hover:bg-white hover:text-black text-white border border-white font-bold py-4 lg:py-3 rounded-2xl lg:rounded-lg text-base lg:text-base transition-all">
                                     <span class="bi bi-file-earmark-arrow-down-fill"></span> Download
                                 </button>
                             </div>
                         </div>
                         
-                        <button class="w-full mt-8 bg-white hover:bg-black hover:text-white text-black border border-white font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all">
+                        <button class="w-full mt-8 bg-white hover:bg-black hover:text-white text-black border border-white font-bold py-4 lg:py-3 rounded-2xl lg:rounded-lg text-base lg:text-base transition-all">
                             View All Projects
                         </button>
                     </div>
@@ -396,38 +499,40 @@
                     <div class="lg:hidden">
                         <h3 class="text-3xl lg:text-2xl font-bold text-white mb-8">Quick Actions</h3>
                         <div class="overflow-x-auto">
-                            <div class="flex space-x-6 pb-4" style="min-width: max-content;">
-                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
-                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
-                                        <span class="bi bi-plus-square-fill" style="color: black; font-size: 30px;"></span>
-                                    </div>
-                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">New Project</h4>
-                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Start creating</p>
-                                </div>
-                                
-                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
-                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
-                                        <span class="bi bi-cloud-arrow-up-fill" style="color: black; font-size: 30px;"></span>
-                                    </div>
-                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Upload Files</h4>
-                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Drop your stems</p>
-                                </div>
-                                
-                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
-                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
-                                        <span class="bi bi-chat-dots-fill" style="color: black; font-size: 30px;"></span>
-                                    </div>
-                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Chat</h4>
-                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Talk to engineer</p>
-                                </div>
-                                
-                                <div class="bg-black rounded-3xl p-8 text-center border border-white border-opacity-20 flex-shrink-0 w-64">
-                                    <div class="w-24 h-24 mx-auto mb-8 bg-white rounded-2xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
-                                        <span class="bi bi-file-earmark-music-fill" style="color: black; font-size: 30px;"></span>
-                                    </div>
-                                    <h4 class="font-bold text-white text-xl lg:text-lg mb-3">Master</h4>
-                                    <p class="text-white text-opacity-60 text-lg lg:text-base">Level up track</p>
-                                </div>
+                              <div class="flex space-x-6 pb-4" style="min-width: max-content;">
+                                <div class="bg-black rounded-2xl p-5 text-center border border-white border-opacity-20 flex-shrink-0 w-44">
+  <div class="w-14 h-16 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+    <span class="bi bi-plus-square-fill" style="color: black; font-size: 18px;"></span>
+  </div>
+  <h4 class="font-bold text-white text-base mb-1">New Project</h4>
+  <p class="text-white text-opacity-60 text-sm">Start creating</p>
+</div>
+
+<div class="bg-black rounded-2xl p-5 text-center border border-white border-opacity-20 flex-shrink-0 w-44">
+  <div class="w-14 h-16 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+    <span class="bi bi-cloud-arrow-up-fill" style="color: black; font-size: 18px;"></span>
+  </div>
+  <h4 class="font-bold text-white text-base mb-1">Upload Files</h4>
+  <p class="text-white text-opacity-60 text-sm">Drop your stems</p>
+</div>
+
+<div class="bg-black rounded-2xl p-5 text-center border border-white border-opacity-20 flex-shrink-0 w-44">
+  <div class="w-14 h-16 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+    <span class="bi bi-chat-dots-fill" style="color: black; font-size: 18px;"></span>
+  </div>
+  <h4 class="font-bold text-white text-base mb-1">Chat</h4>
+  <p class="text-white text-opacity-60 text-sm">Talk to engineer</p>
+</div>
+
+<div class="bg-black rounded-2xl p-5 text-center border border-white border-opacity-20 flex-shrink-0 w-44">
+  <div class="w-14 h-16 mx-auto mb-3 bg-white rounded-lg flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-600/30 transition-all">
+    <span class="bi bi-file-earmark-music-fill" style="color: black; font-size: 18px;"></span>
+  </div>
+  <h4 class="font-bold text-white text-base mb-1">Master</h4>
+  <p class="text-white text-opacity-60 text-sm">Level up track</p>
+</div>
+
+
                                 
                                 
                             </div>
@@ -437,11 +542,11 @@
                     <!-- Mobile Plan Card -->
                     <div class="lg:hidden bg-gradient-to-r from-red-900/30 to-red-800/30 rounded-3xl p-8 border border-red-800/50">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-3xl lg:text-2xl font-bold text-white">Pro Plan</h3>
-                            <span class="bg-red-600 text-white px-6 py-3 lg:px-4 lg:py-2 rounded-full text-lg lg:text-base font-bold">Unlimited</span>
+                            <h3 class="text-2xl lg:text-xl font-bold text-white">Pro Plan</h3>
+                            <span class="bg-red-600 text-white px-4 py-2 lg:px-4 lg:py-2 rounded-full text-sm lg:text-base font-bold">Unlimited</span>
                         </div>
-                        <p class="text-white text-opacity-80 text-xl lg:text-base mb-8">Mix, master, and refine without limits.</p>
-                        <button class="w-full bg-white hover:bg-black hover:text-white text-black font-bold py-6 lg:py-3 rounded-2xl lg:rounded-lg text-xl lg:text-base transition-all border border-white">
+                        <p class="text-white text-opacity-80 text-lg lg:text-base mb-8">Mix, master, and refine without limits.</p>
+                        <button class="w-full bg-white hover:bg-black hover:text-white text-black font-bold py-4 lg:py-3 rounded-2xl lg:rounded-lg text-base lg:text-base transition-all border border-white">
                             Manage Plan
                         </button>
                     </div>
@@ -727,26 +832,26 @@
 <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50 shadow-2xl h-[72px]">
   <div class="flex justify-between items-center h-full px-8 relative">
     <!-- Home -->
-    <button id="mobileHomeBtn" class="mobile-nav-item flex flex-col items-center justify-center group" onclick="showSection('home')" aria-label="Home">
+    <button id="mobileHomeBtn" class="mobile-nav-item flex flex-col items-center justify-center group loadLink" onclick="" aria-label="Home" data-file="">
       <span class="bi bi-house-fill" style="font-size: 30px;"></span>
     </button>
     <!-- Chat (spaced from plus, right side) -->
-    <button id="mobileChatBtn" class="mobile-nav-item flex flex-col items-center justify-center group mr-8" onclick="showSection('engineers')" aria-label="Chat">
+    <button id="mobileChatBtn" class="mobile-nav-item flex flex-col items-center justify-center group mr-8 loadLink" onclick="" aria-label="Chat" data-file="chat.php">
       <span class="bi bi-chat-dots-fill" style="font-size: 30px;"></span>
     </button>
     <!-- Plus (Main Action) -->
     <!-- Plus (Main Action, Red Circle with White Plus) -->
 <button id="mobilePlusBtn"
-  class="absolute left-1/2 -translate-x-1/2 -top-6 bg-red-600 w-16 h-16 rounded-full shadow-lg z-10 flex items-center justify-center"
-  onclick="startNewProject()" aria-label="New Project">
+  class="absolute left-1/2 -translate-x-1/2 -top-6 bg-red-600 w-16 h-16 rounded-full shadow-lg z-10 flex items-center justify-center loadLink"
+  onclick="" aria-label="New Project" data-file="start_project.php">
   <span class="bi bi-plus" style="font-size: 38px; color: white;"></span>
 </button>
     <!-- Projects (spaced from plus, left side) -->
-    <button id="mobileProjectsBtn" class="mobile-nav-item flex flex-col items-center justify-center group ml-8" onclick="showSection('projects')" aria-label="Projects">
+    <button id="mobileProjectsBtn" class="mobile-nav-item flex flex-col items-center justify-center group ml-8 loadLink" onclick="" aria-label="Projects" data-file="projects.php">
       <span class="bi bi-file-earmark-fill" style="font-size: 30px;"></span>
     </button>
     <!-- My Account -->
-    <button id="mobileAccountBtn" class="mobile-nav-item flex flex-col items-center justify-center group" onclick="showSettingsSection()" aria-label="My Account">
+    <button id="mobileAccountBtn" class="mobile-nav-item flex flex-col items-center justify-center group loadLink" onclick="" aria-label="My Account" data-file="account_settings.php">
       <span class="bi bi-person-fill" style="font-size: 30px;"></span>
     </button>
 </div>
@@ -1009,5 +1114,89 @@
             input.click();
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c1f15c06ebd1fa',t:'MTc2MDA1NTUzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<script>
+/*
+ Full-page dynamic loader using document.write().
+ - Fetches full HTML (head+body).
+ - Writes it into the current document (same result as a navigation).
+ - Uses history.pushState so URL updates and back/forward can be handled.
+ - Requires the loader script to exist in every page you load (so attachDynamicLoader is re-run).
+*/
+
+async function loadFullPage(file, addToHistory = true) {
+  if (!file) return;
+  try {
+    document.documentElement.style.cursor = 'wait';
+    const res = await fetch(file, { cache: "no-cache" });
+    if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+    const html = await res.text();
+
+    // Update history so the URL changes and back button works
+    if (addToHistory) {
+      try {
+        history.pushState({ url: file }, '', file);
+      } catch (e) {
+        // Some environments disallow pushState for cross-origin file paths; ignore.
+      }
+    }
+
+    // Write new document (this completely replaces current document)
+    // This behaves like a full navigation so CSS/links/scripts load normally.
+    document.open();
+    document.write(html);
+    document.close();
+
+    // After document.write the JS execution context resets; ensure any post-load init exists in the new page.
+  } catch (err) {
+    console.error('loadFullPage error:', err);
+    // fallback: full navigation if something fails
+    window.location.href = file;
+  } finally {
+    try { document.documentElement.style.cursor = ''; } catch(e){}
+  }
+}
+
+// Attach this to .loadLink elements. Must be executed on every page, so include this script in each page.
+function attachDynamicLoader() {
+  // Remove previous handlers to avoid double-binding if this is re-run
+  document.querySelectorAll('.loadLink').forEach(el => {
+    el.replaceWith(el.cloneNode(true));
+  });
+
+  document.querySelectorAll('.loadLink').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const file = this.getAttribute('data-file') || this.getAttribute('href');
+      if (!file) return;
+      loadFullPage(file, true);
+    });
+  });
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(ev) {
+  const state = ev.state;
+  const url = (state && state.url) ? state.url : location.pathname;
+  // load the URL without pushing a new history entry
+  loadFullPage(url, false);
+});
+
+// Initial attach (run on first load)
+attachDynamicLoader();
+
+// If you need to expose these functions globally for debugging:
+window.loadFullPage = loadFullPage;
+window.attachDynamicLoader = attachDynamicLoader;
+</script>
+
+
+
+
+
+
+
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c1f15c06ebd1fa',t:'MTc2MDA1NTUzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
 </html>
